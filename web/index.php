@@ -162,37 +162,6 @@
             <button type="button" class="btn btn-primary search">Search</button>
           </div>
 
-          <!-- Search Widget -->
-          <div class="card my-4">
-            <h5 class="card-header">Authors</h5>
-            <div class="card-body">
-              <div>
-                <div class="form-row">
-                  <div class="form-group col position-relative">
-                    <input type="text" class="form-control" id="user" placeholder="username">
-                    <div class="valid-feedback feedback-icon">
-                      <i class="fa fa-check" id="validIcon"></i>
-                    </div>
-                    <div class="invalid-feedback feedback-icon">
-                      <i class="fa fa-times"></i>
-                    </div>
-                  </div>
-                  <div class="form-group col-auto">
-                    <a href="#/" class="btn btn-primary float-right add-user">
-                      <span class="fas fa-plus-circle" aria-hidden="true"></span>
-                    </a>
-                  </div>
-                </div> <!-- form-row -->
-              </div>
-              <div class="form-group">
-                <div class="input-group">
-                  <div class="mb-0 user-list">
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
         </div>
 
       </div>
@@ -219,28 +188,8 @@
     <script src="js/post-util.js"></script>
 
     <script>
-        var callCounter = 0;
-        function decrementCounter() {
-          callCounter = callCounter - 1;
-          console.log(callCounter);
-          if (callCounter === 0) {
-            $('#loading').hide();
-            if ($(".blog-entry").length <= 1) $("#search-error").show();
-          }
-        }
-
         steem.api.setOptions({ url: 'https://api.steemit.com/' });
         $(document).ready(function() {
-          $.getJSON('./api/get-users.php', 
-            { user : null }, 
-            function(data) {
-              data.users.forEach((user, index) => {
-                $('.user-list').append('<span class="badge badge-dark user-item" style="margin-left: 2px"><a href="#/"><span class="fas fa-times-circle remove-user" aria-hidden="true"></span></a><span style="margin-left: 2px">' + user + '</span></span>');
-              });
-            }
-          ).fail(function(error) {
-             console.log(error);
-          });
           $('.blog-entry').not(':first').remove();
 
           $('.search').on('click', function() {
@@ -248,11 +197,6 @@
             $("#search-error").hide()
           
             $('.blog-entry').not(':first').remove();
-            const authors = [];
-            $('.user-item').each(function() {
-              authors.push($(this).text());
-            });
-
             const tagsFilter = [];
             $('.tag-item').each(function() {
               tagsFilter.push($(this).text());
@@ -269,47 +213,44 @@
             console.log(dates);
             const datenow = new Date();
 
-            callCounter = authors.length;
+            steem.api.getDiscussionsByCreated( {"limit":"10", "tag":"utopian-io"}, function(err, result) {
+              console.log(err, result);
 
-//            authors.forEach(author => {
-              steem.api.getDiscussionsByCreated( {"limit":"10", "tag":"utopian-io"}, function(err, result) {
-                console.log(err, result);
-
-                const filtered_for_date = [];
-                result.forEach(post => {
-                  if (post.created >= dates[0] && post.created < dates[1]) {
-                    filtered_for_date.push(post);
-                  }
-                });
-
-                const filtered_for_word_count = [];
-                filtered_for_date.forEach(post => {
-                  const postBody = removeMarkdown(post.body);
-                  const wordCount = countWords(postBody);
-                  if (wordCount >= minWordCnt) {
-                    filtered_for_word_count.push(post);
-                  }
-                });
-
-                const filtered_for_image_count = [];
-                filtered_for_word_count.forEach(post => {
-                  const metadata = JSON.parse(post.json_metadata);
-                  if(metadata.image && metadata.image.length >= minImgCnt) {
-                    filtered_for_image_count.push(post);
-                  }
-                });
-
-                const finalPostList = filterPostsUsingTags(filtered_for_image_count, tagsFilter);
-                console.log(`posts to display (${author}): ` + finalPostList.length);
-
-                finalPostList.forEach(post => {
-                  const div = createBlogEntry(post);
-                  $(div).insertAfter('.blog-entry:last');
-                });
-
-                decrementCounter();
+              const filtered_for_date = [];
+              result.forEach(post => {
+                if (post.created >= dates[0] && post.created < dates[1]) {
+                  filtered_for_date.push(post);
+                }
               });
-//            }); <!-- authors.forEach -->
+
+              const filtered_for_word_count = [];
+              filtered_for_date.forEach(post => {
+                const postBody = removeMarkdown(post.body);
+                const wordCount = countWords(postBody);
+                if (wordCount >= minWordCnt) {
+                  filtered_for_word_count.push(post);
+                }
+              });
+
+              const filtered_for_image_count = [];
+              filtered_for_word_count.forEach(post => {
+                const metadata = JSON.parse(post.json_metadata);
+                if(metadata.image && metadata.image.length >= minImgCnt) {
+                  filtered_for_image_count.push(post);
+                }
+              });
+
+              const finalPostList = filterPostsUsingTags(filtered_for_image_count, tagsFilter);
+              console.log(`posts to display (${author}): ` + finalPostList.length);
+
+              finalPostList.forEach(post => {
+                const div = createBlogEntry(post);
+                $(div).insertAfter('.blog-entry:last');
+              });
+
+              $('#loading').hide();
+              if ($(".blog-entry").length <= 1) $("#search-error").show();
+            });
 
           });
 
