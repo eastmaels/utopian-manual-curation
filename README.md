@@ -24,8 +24,3 @@ https://utopian-curator.herokuapp.com/
 - PHP
 - Heroku fully cloud deployable
 - Bootstrap 4, jQuery
-
-
-## Contributing
-
-Currently in pre-alpha. Issues and suggestions for now are closed to @steemph.uae curation team.
