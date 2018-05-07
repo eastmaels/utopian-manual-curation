@@ -198,12 +198,14 @@
                   filtered_for_date.push(post);
                 }
               });
+              console.log(filtered_for_date);
 
               const finalPostList = filterPostsUsingTags(filtered_for_date, tagsFilter);
               finalPostList.forEach(post => {
                 const div = createBlogEntry(post);
                 $(div).insertAfter('.blog-entry:last');
               });
+              console.log(finalPostList);
 
               $('#loading').hide();
               if ($(".blog-entry").length <= 1) $("#search-error").show();
