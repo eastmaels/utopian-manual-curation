@@ -1,0 +1,5 @@
+.env
+httpd.bat
+web/phpinfo.php
+.project
+.settings/
