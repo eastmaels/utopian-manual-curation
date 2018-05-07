@@ -3,20 +3,18 @@ function filterPostsUsingTags(posts, tags) {
   posts.forEach((post) => {
     const metadata = JSON.parse(post.json_metadata);
 
+    let match = 0;
+    tags.forEach(inputTag => {
+      if (metadata.tags.includes(inputTag)) {
+        match++;
+      };
+    });
+
     let containsTags = false;
     if ($('#contains-all-tags').is(':checked')) {
-      tags.forEach(inputTag => {
-        if (!metadata.tags.includes(inputTag)) {
-          return false;
-        };
-      });
+      if (match === tags.length) containsTags = true;
     } else {
-      tags.forEach(inputTag => {
-        if (metadata.tags.includes(inputTag)) {
-          containsTags = true;
-          return false;
-        }
-      });
+      if (match) containsTags = true;
     }
 
     if (containsTags) {
