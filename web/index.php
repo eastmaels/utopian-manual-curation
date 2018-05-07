@@ -118,29 +118,7 @@
                     id="end-date" placeholder="End Date" value="<?php echo date('Y-m-d'); ?>" />
                 </div>
               </div>
-              <div class="form-row">
-                <div class="col-auto">
-                  <label>Has more than</label>
-                </div>
-                <div class="col-3">
-                  <input type="number" class="form-control" style="font-size: 14px" placeholder="Word Count" value="300" id="min-word-count">
-                </div>
-                <div class="col-auto">
-                  <label>words</label>
-                </div>
-              </div>
 
-              <div class="form-row">
-                <div class="col-auto">
-                  <label>Includes at least</label>
-                </div>
-                <div class="col-3">
-                  <input type="number" class="form-control" style="font-size: 14px" placeholder="Image Count" value="3" id="min-img-count">
-                </div>
-                <div class="col-auto">
-                  <label>images</label>
-                </div>
-              </div>
               <div class="form-row">
                 <div class="input-group">
                   <input type="text" class="form-control" id="tag" placeholder="tag">
@@ -155,7 +133,7 @@
                     <span class="badge badge-dark tag-item" style="margin-left: 2px"><a href="#/"><span class="fas fa-times-circle remove-tag" aria-hidden="true"></span></a><span style="margin-left: 2px">utopian-io</span></span>
                     <span class="badge badge-dark tag-item" style="margin-left: 2px"><a href="#/"><span class="fas fa-times-circle remove-tag" aria-hidden="true"></span></a><span style="margin-left: 2px">analysis</span></span>
                   </div>
-                  <input class="card-link" type="checkbox" id="contains-all-tags" /> contains all tags
+                  <input class="card-link" type="checkbox" id="contains-all-tags" checked /> contains all tags
                 </div>
               </div>
             </div>
@@ -201,11 +179,9 @@
             $('.tag-item').each(function() {
               tagsFilter.push($(this).text());
             });
+            console.log(tagsFilter);
 
             const contains_all_tags = $('#contains-all-tags').is(":checked");
-            const minWordCnt = $('#min-word-count').val();
-            const minImgCnt = $('#min-img-count').val();
-
             const endDate = new Date($('#end-date').val());
             endDate.setDate(endDate.getDate() + 1);
 
@@ -223,24 +199,7 @@
                 }
               });
 
-              const filtered_for_word_count = [];
-              filtered_for_date.forEach(post => {
-                const postBody = removeMarkdown(post.body);
-                const wordCount = countWords(postBody);
-                if (wordCount >= minWordCnt) {
-                  filtered_for_word_count.push(post);
-                }
-              });
-
-              const filtered_for_image_count = [];
-              filtered_for_word_count.forEach(post => {
-                const metadata = JSON.parse(post.json_metadata);
-                if(metadata.image && metadata.image.length >= minImgCnt) {
-                  filtered_for_image_count.push(post);
-                }
-              });
-
-              const finalPostList = filterPostsUsingTags(filtered_for_image_count, tagsFilter);
+              const finalPostList = filterPostsUsingTags(filtered_for_date, tagsFilter);
               finalPostList.forEach(post => {
                 const div = createBlogEntry(post);
                 $(div).insertAfter('.blog-entry:last');
