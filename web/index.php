@@ -189,7 +189,7 @@
             console.log(dates);
             const datenow = new Date();
 
-            steem.api.getDiscussionsByCreated( {"limit":"300", "tag":"utopian-io"}, function(err, result) {
+            steem.api.getDiscussionsByCreated( {"limit":"100", "tag":"utopian-io"}, function(err, result) {
               console.log(err, result);
 
               const filtered_for_date = [];
