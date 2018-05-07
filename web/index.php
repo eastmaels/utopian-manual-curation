@@ -241,8 +241,6 @@
               });
 
               const finalPostList = filterPostsUsingTags(filtered_for_image_count, tagsFilter);
-              console.log(`posts to display (${author}): ` + finalPostList.length);
-
               finalPostList.forEach(post => {
                 const div = createBlogEntry(post);
                 $(div).insertAfter('.blog-entry:last');
