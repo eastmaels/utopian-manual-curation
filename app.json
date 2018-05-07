@@ -1,6 +1,6 @@
 {
-  "name": "STEEM PH Curator",
-  "description": "Tool for @steemph curators",
-  "repository": "https://github.com/eastmaels/steemph-uae-curator.git",
+  "name": "Utopian Manual Curation",
+  "description": "Tool for Utopian curators",
+  "repository": "https://github.com/eastmaels/utopian-manual-curation",
   "addons": []
 }
