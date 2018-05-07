@@ -17,7 +17,7 @@ or
 
 ## Testing
 
-https://steemph-uae-curator.herokuapp.com/
+https://utopian-curator.herokuapp.com/
 
 ## Technology Stack
 
